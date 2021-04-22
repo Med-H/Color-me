@@ -10,9 +10,9 @@ const decorateInner = (tagInfo: TagInfo, editor: vscode.TextEditor, src: string)
 	if (tagInfo.decChar !== undefined) {
 		tagInfo.decChar.decorator.dispose();
 	}
-	var regex = new RegExp(`${commentSetting.startRegExp || commentSetting.start}|${commentSetting.endRegExp || commentSetting.end}|<(?:/|)${tagInfo.tagName}(?:$|(?:| (?:.*?)[^-?%$])>)`, 'gm');
+	const regex = new RegExp(`${commentSetting.startRegExp || commentSetting.start}|${commentSetting.endRegExp || commentSetting.end}|<(?:/|)${tagInfo.tagName}(?:$|(?:| (?:.*?)[^-?%$])(?<!=)>)`, 'gm');
 	let match: RegExpExecArray | null;
-	var inComment = false;
+	let inComment = false;
 	tagInfo.decChar = {
 		chars: [],
 		decorator: vscode.window.createTextEditorDecorationType({
@@ -20,7 +20,7 @@ const decorateInner = (tagInfo: TagInfo, editor: vscode.TextEditor, src: string)
 		})
 	};
 	while (match = regex.exec(src)) {
-		var splited = match[0].split(/[{}"]/);
+		const splited = match[0].split(/[{}"]/);
 		//コメントだったら飛ばす
 		if (match[0] === commentSetting.start) {
 			// コメント開始
@@ -40,17 +40,17 @@ const decorateInner = (tagInfo: TagInfo, editor: vscode.TextEditor, src: string)
 			splited.forEach(function (single, i) {
 				//偶数だったら
 				if (i % 2 === 0 && match !== null && tagInfo.decChar !== undefined) {
-					var startPos = editor.document.positionAt(match.index + singleLengths);
-					var endPos = editor.document.positionAt(match.index + singleLengths + single.length);
-					var range = new vscode.Range(startPos, endPos);
+					const startPos = editor.document.positionAt(match.index + singleLengths);
+					const endPos = editor.document.positionAt(match.index + singleLengths + single.length);
+					const range = new vscode.Range(startPos, endPos);
 					tagInfo.decChar.chars.push(range);
 				}
 				singleLengths += single.length + 1;
 			});
 		} else {
-			var startPos = editor.document.positionAt(match.index);
-			var endPos = editor.document.positionAt(match.index + match[0].length);
-			var range = new vscode.Range(startPos, endPos);
+			const startPos = editor.document.positionAt(match.index);
+			const endPos = editor.document.positionAt(match.index + match[0].length);
+			const range = new vscode.Range(startPos, endPos);
 			tagInfo.decChar.chars.push(range);
 		}
 	}
@@ -63,7 +63,7 @@ const decorate = () => {
 		return;
 	}
 	const src = editor.document.getText();
-	const matches = src.match(/<(?:\/|)([a-zA-Z][a-zA-Z0-9-]*)(?:$|(?:| (?:.*?)[^-?%$])>)/gm) || [];
+	const matches = src.match(/<(?:\/|)([a-zA-Z][a-zA-Z0-9.-]*)(?:$|(?:| (?:.*?)[^-?%$])(?<!=)>)/gm) || [];
 	const tagNameLikeWords = matches.map((word) => word.replace(/[</>]|(?: .*$)/g, ''));
 	const uniqueTagNames = [...new Set(tagNameLikeWords)];
 	uniqueTagNames.forEach((tagName) => {
@@ -71,10 +71,11 @@ const decorate = () => {
 		if (tagInfos.map(({ tagName }) => tagName).includes(tagName)) {
 			return;
 		}
+		const tagColor = colorMap[tagName] || colorEntries[tagName.length + (tagName.match(/[aiueo]/g)?.length || 0)][1];
 		tagInfos.push({
 			decChar: undefined,
 			tagName,
-			tagColor: colorMap[tagName] || colorEntries[tagName.length][1],
+			tagColor,
 		});
 	});
 	tagInfos.forEach(function (tagInfo) {
