@@ -122,4 +122,10 @@ export function activate(context: vscode.ExtensionContext) {
 	}, null, context.subscriptions);
 	decorate(colorObject.colorMap, colorObject.colorEntries);	
 }
-export function deactivate() { }
+export function deactivate() { 
+	tagInfos.forEach((tagInfo) => {
+		if (tagInfo.decChar?.decorator) {
+			tagInfo.decChar?.decorator.dispose();
+		}
+	});
+}
