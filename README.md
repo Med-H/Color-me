@@ -1,5 +1,5 @@
-# Color the tag name
+# Color Me
 
 This extension will make your HTML, Vue and React Components tags colorful.  
 
-![preview](../vscode-color-the-tag-name/img/example.png)
+![preview](./img/example.png)
