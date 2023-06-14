@@ -2,7 +2,7 @@
 	"name": "color-me",
 	"displayName": "Color Me",
 	"description": "This extension will make your Vue, React Components, html tags colorful.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "Med-H",
 	"license": "MIT",
 	"homepage": "https://github.com/Med-H/Color-me/blob/main/README.md",
