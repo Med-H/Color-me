@@ -81,7 +81,7 @@ const decorate = (colorMap: Record<string, string>, colorEntries: [string, strin
 		return;
 	}
 	const src = editor.document.getText();
-	const matches = src.match(/<(?:\/|)([a-zA-Z][a-zA-Z0-9.-]*)(?:$|(?:| (?:.*?)[^-?%$])(?<!=)>)/gm) ?? [];
+	const matches = src.match(/<(?:\/|)([a-zA-Z][a-zA-Z0-9.-]*)(?:$|(?: (?:.*?)[^-?%$])(?<!=)>)/gm) ?? [];
 	const tagNames = new Set(matches.map((word) => word.replace(/[</>]|(?: .*$)/g, '')));;
 	
 	tagNames.forEach((tagName) => {
